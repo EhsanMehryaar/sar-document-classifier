@@ -1,10 +1,8 @@
 from __future__ import annotations
 
+import math
 import re
 from functools import lru_cache
-
-import joblib
-import numpy as np
 
 from utils import ALL_LABELS, CLASSIFIER_DIR
 
@@ -22,16 +20,28 @@ def _load_model():
             return "transformer", (tokenizer, model, torch)
     except Exception:
         pass
-    baseline = CLASSIFIER_DIR / "baseline_tfidf_logreg.joblib"
-    if baseline.exists():
-        return "baseline", joblib.load(baseline)
+
+    try:
+        import joblib
+
+        baseline = CLASSIFIER_DIR / "baseline_tfidf_logreg.joblib"
+        if baseline.exists():
+            return "baseline", joblib.load(baseline)
+    except Exception:
+        pass
+
     return "heuristic", None
+
+
+def _sigmoid(value: float) -> float:
+    return 1.0 / (1.0 + math.exp(-value))
+
 
 def _heuristic(text: str) -> dict[str, float]:
     lower = text.lower()
     cues = {
-        "fraud": ["fraud", "false", "misled", "inflated", "restatement", "altered", "backdated"],
-        "money_laundering": ["launder", "suspicious", "shell", "layered", "beneficial owner", "transfers"],
+        "fraud": ["fraud", "false", "misled", "inflated", "restatement", "altered", "backdated", "accounting"],
+        "money_laundering": ["launder", "suspicious", "shell", "layered", "beneficial owner", "transfers", "aml"],
         "sanctions_violation": ["sanction", "restricted", "export control", "screening", "blocked", "embargo"],
     }
     scores = {}
@@ -52,10 +62,8 @@ def classify(text: str) -> dict[str, float]:
         tokenizer, clf, torch = model
         enc = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=256)
         with torch.no_grad():
-            logits = clf(**enc).logits.numpy()[0]
-        probs = 1 / (1 + np.exp(-logits))
+            logits = clf(**enc).logits.detach().cpu().tolist()[0]
+        probs = [_sigmoid(value) for value in logits]
         return {label: float(probs[i]) for i, label in enumerate(ALL_LABELS)}
     cleaned = re.sub(r"\s+", " ", text.strip())
     return _heuristic(cleaned)
-
-
