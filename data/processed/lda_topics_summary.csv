@@ -1,0 +1,9 @@
+topic_id,model,top_keywords,doc_count,representative_doc_ids
+5,lda,"routine, oversight market, revenue, employees market, interruption market, filed customers, interruption customers, oversight matter, interruption company, oversight company",207,"[""DOC-00284"", ""DOC-00390"", ""DOC-00109"", ""DOC-00368"", ""DOC-00038""]"
+6,lda,"customer, contracts, clients, regional, new, opened, customer contracts, local, sector announcement, support clients",99,"[""DOC-00542"", ""DOC-00225"", ""DOC-00395"", ""DOC-00347"", ""DOC-00001""]"
+0,lda,"restricted, investors, million, payments, sanctions, shipments, screening, booked, unit, involved",72,"[""DOC-00391"", ""DOC-00332"", ""DOC-00088"", ""DOC-00112"", ""DOC-00079""]"
+7,lda,"cash flow, margins, investing technology, chain resilience, earnings demand, reported steady, increased cash, technology supply, operating margins, technology",66,"[""DOC-00586"", ""DOC-00160"", ""DOC-00498"", ""DOC-00226"", ""DOC-00282""]"
+1,lda,"review, million, described, interruption market, records, transfers, transactions, cash, transactions connected, leaked audit",60,"[""DOC-00393"", ""DOC-00271"", ""DOC-00310"", ""DOC-00318"", ""DOC-00512""]"
+4,lda,"payments, shipping, invoices, reported, chain, firm, funds, million, records, compliance",34,"[""DOC-00570"", ""DOC-00342"", ""DOC-00504"", ""DOC-00026"", ""DOC-00093""]"
+2,lda,"accounts, trade, payments, intermediaries, counterparties, investigators, invoices, trade invoices, layered, layered accounts",31,"[""DOC-00247"", ""DOC-00404"", ""DOC-00300"", ""DOC-00301"", ""DOC-00286""]"
+3,lda,"transactions, identified, customer, internal, disclosed, later, company voluntarily, names misspelled, names, entities",31,"[""DOC-00451"", ""DOC-00010"", ""DOC-00193"", ""DOC-00013"", ""DOC-00321""]"
