@@ -59,9 +59,9 @@ def overview(df: pd.DataFrame):
     y = label_matrix(df["labels_list"])
     counts = y.sum().reset_index()
     counts.columns = ["label", "count"]
-    st.plotly_chart(px.bar(counts, x="label", y="count", title="Class Distribution"), use_container_width=True)
+    st.plotly_chart(px.bar(counts, x="label", y="count", title="Class Distribution"), width="stretch")
     co = y.T.dot(y)
-    st.plotly_chart(px.imshow(co, text_auto=True, title="Label Co-occurrence"), use_container_width=True)
+    st.plotly_chart(px.imshow(co, text_auto=True, title="Label Co-occurrence"), width="stretch")
 
 
 def document_explorer(df: pd.DataFrame):
@@ -81,7 +81,7 @@ def document_explorer(df: pd.DataFrame):
     if len(date_range) == 2:
         view = view[(view["date"].dt.date >= date_range[0]) & (view["date"].dt.date <= date_range[1])]
     selected_id = st.selectbox("Document", view["doc_id"].tolist()[:500] if not view.empty else [])
-    st.dataframe(view[["doc_id", "date", "title", "labels"]].head(300), use_container_width=True, hide_index=True)
+    st.dataframe(view[["doc_id", "date", "title", "labels"]].head(300), width="stretch", hide_index=True)
     if selected_id:
         row = df[df["doc_id"] == selected_id].iloc[0]
         ents = extract_entities(row["text"])
@@ -89,7 +89,7 @@ def document_explorer(df: pd.DataFrame):
         st.caption(f"{row['doc_id']} | {row['date'].date()} | true labels: {', '.join(row['labels_list'])}")
         st.markdown(highlight_entities(row["text"], ents), unsafe_allow_html=True)
         probs = classify(row["text"])
-        st.plotly_chart(px.bar(x=list(probs.keys()), y=list(probs.values()), labels={"x": "label", "y": "probability"}), use_container_width=True)
+        st.plotly_chart(px.bar(x=list(probs.keys()), y=list(probs.values()), labels={"x": "label", "y": "probability"}), width="stretch")
         st.json(ents)
 
 
@@ -109,9 +109,9 @@ def topic_page(df: pd.DataFrame):
     if summary.empty:
         st.info("Run `python src/train_topic_model.py` to generate topics.")
         return
-    st.dataframe(summary, use_container_width=True, hide_index=True)
+    st.dataframe(summary, width="stretch", hide_index=True)
     if not over_time.empty:
-        st.plotly_chart(px.area(over_time, x="period", y="count", color="topic_id", title="Topics Over Time"), use_container_width=True)
+        st.plotly_chart(px.area(over_time, x="period", y="count", color="topic_id", title="Topics Over Time"), width="stretch")
     doc_id = st.selectbox("Representative document", df["doc_id"].tolist())
     row = df[df["doc_id"] == doc_id].iloc[0]
     st.subheader(row["title"])
@@ -125,7 +125,7 @@ def live_scoring():
         return
     probs = classify(text)
     ents = extract_entities(text)
-    st.plotly_chart(px.bar(x=list(probs.keys()), y=list(probs.values()), labels={"x": "label", "y": "probability"}), use_container_width=True)
+    st.plotly_chart(px.bar(x=list(probs.keys()), y=list(probs.values()), labels={"x": "label", "y": "probability"}), width="stretch")
     st.json(ents)
     summary = load_optional_csv("topics_summary.csv")
     if not summary.empty:
@@ -160,3 +160,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
