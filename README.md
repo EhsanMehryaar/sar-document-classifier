@@ -16,7 +16,7 @@ This is not a production AML system. The labels, articles, and risk patterns are
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r requirements-training.txt
 python -m spacy download en_core_web_sm
 ```
 
@@ -42,6 +42,18 @@ python src/train_topic_model.py --skip-bertopic
 streamlit run app/streamlit_app.py
 ```
 
+
+## Streamlit Cloud Deployment
+
+This repository is configured for Streamlit Cloud with a lightweight `requirements.txt` and `runtime.txt` pinned to Python 3.11. The deployment install intentionally excludes heavyweight training packages such as Torch, Transformers, BERTopic, UMAP, and HDBSCAN because the dashboard uses the generated CSV artifacts and saved baseline classifier.
+
+For Streamlit Cloud, set the main file to:
+
+```text
+app/streamlit_app.py
+```
+
+After changing dependency files, commit and push `requirements.txt`, `requirements-training.txt`, `runtime.txt`, the `data/processed` outputs, `data/raw/articles.csv`, and `models/classifier/baseline_tfidf_logreg.joblib` so the hosted app has the artifacts it needs.
 ## Outputs
 
 - `data/raw/articles.csv`: synthetic article corpus
@@ -59,3 +71,4 @@ streamlit run app/streamlit_app.py
 - DistilBERT fine-tuning can be slow on CPU. Use `--skip-transformer` for a baseline-only demo.
 - BERTopic requires `bertopic`, `sentence-transformers`, `umap-learn`, and `hdbscan`; LDA is used as a robust fallback.
 - This project demonstrates architecture and workflow, not compliance-grade accuracy or regulatory fitness.
+
